@@ -337,53 +337,6 @@ This project contains the following documentation:
 
 ---
 
-## 11. Future Roadmap
-
-[High-level strategic direction - not detailed feature list]
-
-### Short-term (3-6 months)
-- [Initiative 1 - e.g., "Performance optimization for large datasets"]
-- [Initiative 2 - e.g., "Enhanced mobile experience"]
-
-### Mid-term (6-12 months)
-- [Initiative 1 - e.g., "Advanced analytics with predictive insights"]
-- [Initiative 2 - e.g., "Enterprise SSO and compliance features"]
-
-### Long-term (12+ months)
-- [Initiative 1 - e.g., "AI-powered automation capabilities"]
-- [Initiative 2 - e.g., "Multi-region deployment for global scale"]
-- [Initiative 3 - e.g., "Open API platform for third-party integrations"]
-
----
-
-## 12. Contact / Team
-
-### Product Team
-- **Product Manager:** [Name / Email]
-- **Product Owner:** [Name / Email]
-
-### Engineering Team
-- **Engineering Lead:** [Name / Email]
-- **Backend Lead:** [Name / Email]
-- **Frontend Lead:** [Name / Email]
-- **DevOps Lead:** [Name / Email]
-
-### Quality Assurance
-- **QA Lead:** [Name / Email]
-
-### Design Team
-- **Design Lead:** [Name / Email]
-
-### Support & Operations
-- **Support Contact:** [Email / Slack Channel]
-- **On-Call:** [Pager Duty / Slack Channel]
-
-### Documentation
-- **Last Updated By:** [Name]
-- **Documentation Owner:** [Name / Email]
-
----
-
 ## Appendix
 
 ### Glossary
