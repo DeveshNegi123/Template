@@ -48,26 +48,99 @@ Readers should be familiar with:
 
 **Directory Layout:**
 ```
-src/
-├── modules/
-│   ├── user/
+backend/
+├── Dockerfile
+├── app/
+│   ├── api.py
+│   ├── {project_name}/
 │   │   ├── __init__.py
-│   │   ├── controllers/
-│   │   │   ├── user_controller.py
-│   │   │   └── auth_controller.py
-│   │   ├── services/
-│   │   │   ├── user_service.py
-│   │   │   └── auth_service.py
-│   │   ├── repositories/
-│   │   │   └── user_repository.py
-│   │   ├── models/
-│   │   │   ├── user_model.py
-│   │   │   └── session_model.py
-│   │   ├── schemas/
-│   │   │   ├── user_schema.py
-│   │   │   └── auth_schema.py
-│   │   └── exceptions/
-│   │       └── user_exceptions.py
+│   │   ├── backup/
+│   │   │   ├── __init__.py
+│   │   │   ├── backup_config.py
+│   │   │   └── backup_utils.py
+│   │   ├── database/
+│   │   │   ├── __init__.py
+│   │   │   ├── mongodb/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── mongo_config.py
+│   │   │   │   └── mongo_utils.py
+│   │   │   ├── postgres/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── post_config.py
+│   │   │   │   └── post_utils.py
+│   │   │   └── redis/
+│   │   │       ├── __init__.py
+│   │   │       └── redis_config.py
+│   │   ├── handler/
+│   │   │   ├── __init__.py
+│   │   │   └── exception.py
+│   │   ├── iam/
+│   │   │   ├── __init__.py
+│   │   │   └── keycloak/
+│   │   │       ├── __init__.py
+│   │   │       ├── auth.py
+│   │   │       └── auth_config.py
+│   │   ├── logger/
+│   │   │   ├── __init__.py
+│   │   │   ├── elkstack/
+│   │   │   │   ├── Dockerfile
+│   │   │   │   └── logstash.conf
+│   │   │   ├── logging_tool.py
+│   │   │   └── logs/
+│   │   │       └── app.log
+│   │   ├── message_queue/
+│   │   │   ├── __init__.py
+│   │   │   └── rabbitmq/
+│   │   │       ├── __init__.py
+│   │   │       └── rabbit_config.py
+│   │   ├── {library_name}/
+│   │   │   ├── __init__.py
+│   │   │   └── services/
+│   │   │       ├── __init__.py
+│   │   │       ├── {service_name}/
+│   │   │       │   ├── __init__.py
+│   │   │       │   └── {service_name}_process.py
+│   │   │       └── common/
+│   │   │           ├── __init__.py
+│   │   │           └── utils.py
+│   │   ├── payment/
+│   │   │   ├── __init__.py
+│   │   │   ├── razorpay/
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── rz_utils.py
+│   │   │   └── stripe/
+│   │   │       ├── __init__.py
+│   │   │       └── payment_utils.py
+│   │   ├── storage/
+│   │   │   ├── __init__.py
+│   │   │   ├── local_storage/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── local_config.py
+│   │   │   │   └── local_utils.py
+│   │   │   └── s3_storage/
+│   │   │       ├── __init__.py
+│   │   │       ├── s3_config.py
+│   │   │       └── s3_utils.py
+│   │   ├── task_queue/
+│   │   │   ├── __init__.py
+│   │   │   └── celery_q/
+│   │   │       ├── __init__.py
+│   │   │       ├── celery_config.py
+│   │   │       └── tasks.py
+│   │   └── vault/
+│   │       ├── __init__.py
+│   │       ├── kv-policy.hcl
+│   │       ├── v_config.py
+│   │       ├── v_utils.py
+│   │       └── vault.hcl
+│   ├── install.sh
+│   ├── nginx/
+│   │   ├── Dockerfile
+│   │   └── nginx.conf
+│   ├── requirements.txt
+│   ├── setup.py
+│   └── start.sh
+└── docker-compose.yml
 ```
 
 #### 2.1.3 Controllers
@@ -75,7 +148,7 @@ src/
 **Class: UserController**
 ```python
 Purpose: Handle HTTP requests for user operations
-Location: src/modules/user/controllers/user_controller.py
+Location: backend/app/api.py or backend/app/{project_name}/{library_name}/services/{service_name}/{service_name}_process.py
 
 class UserController:
     Methods:
@@ -113,12 +186,12 @@ Error Handling:
 **Class: UserService**
 ```
 Purpose: Implement user management business logic
-Location: src/modules/user/services/user_service.py
+Location: backend/app/{project_name}/{library_name}/services/{service_name}/{service_name}_process.py
 
 Dependencies:
-- UserRepository (data access)
-- EmailService (verification emails)
-- CacheService (session caching)
+- Database utilities (mongo_utils.py, post_utils.py, redis_config.py)
+- Logger (logging_tool.py)
+- Exception handler (handler/exception.py)
 
 Methods:
 - create_user(data: CreateUserDTO) -> User
@@ -167,7 +240,7 @@ def create_user(data: CreateUserDTO) -> User:
 **Class: UserRepository**
 ```
 Purpose: Database operations for User entity
-Location: src/modules/user/repositories/user_repository.py
+Location: backend/app/{project_name}/database/postgres/post_utils.py or mongo_utils.py
 
 Methods:
 - create(user: User) -> User
@@ -265,6 +338,7 @@ class User:
 #### Worker: EmailWorker
 ```
 Purpose: Process email sending jobs from queue
+Location: backend/app/{project_name}/task_queue/celery_q/tasks.py
 Queue: email_queue
 Concurrency: 5 workers
 Retry Policy: 3 attempts with exponential backoff (2^n seconds)
@@ -286,6 +360,7 @@ Error Handling:
 #### Worker: DataAggregationWorker
 ```
 Purpose: Aggregate data for analytics
+Location: backend/app/{project_name}/task_queue/celery_q/tasks.py
 Schedule: Cron - every hour at :00
 Timeout: 10 minutes
 Lock: Distributed lock to prevent concurrent runs
@@ -306,6 +381,7 @@ Process:
 #### Agent: [Agent Name - e.g., "CustomerSupportAgent"]
 ```
 Purpose: Handle customer queries using AI
+Location: backend/app/{project_name}/{library_name}/services/{service_name}/{service_name}_process.py
 Framework: [e.g., CrewAI / LangGraph]
 LLM: [e.g., GPT-4]
 
@@ -1335,23 +1411,32 @@ async def create_user(data: CreateUserDTO):
 
 **Structure:**
 ```
-tests/
-├── unit/
-│   ├── services/
-│   │   ├── test_user_service.py
-│   │   └── test_auth_service.py
-│   ├── repositories/
-│   │   └── test_user_repository.py
-│   └── utils/
-│       └── test_validators.py
+backend/
+├── tests/
+│   ├── unit/
+│   │   ├── database/
+│   │   │   ├── test_mongo_utils.py
+│   │   │   ├── test_post_utils.py
+│   │   │   └── test_redis_config.py
+│   │   ├── services/
+│   │   │   ├── test_service_process.py
+│   │   │   └── test_common_utils.py
+│   │   ├── storage/
+│   │   │   ├── test_s3_utils.py
+│   │   │   └── test_local_utils.py
+│   │   └── payment/
+│   │       ├── test_razorpay_utils.py
+│   │       └── test_stripe_utils.py
+│   └── integration/
+│       └── test_api_integration.py
 ```
 
 **Example Test:**
 ```python
 import pytest
 from unittest.mock import Mock, patch
-from src.services.user_service import UserService
-from src.exceptions import DuplicateEmailException
+from backend.app.{project_name}.{library_name}.services.{service_name}.{service_name}_process import UserService
+from backend.app.{project_name}.handler.exception import DuplicateEmailException
 
 class TestUserService:
     @pytest.fixture
@@ -1403,7 +1488,7 @@ class TestUserService:
 ```python
 import pytest
 from fastapi.testclient import TestClient
-from src.main import app
+from backend.app.api import app
 
 class TestUserAPIIntegration:
     @pytest.fixture
@@ -1615,11 +1700,11 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Install dependencies
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY . .
+COPY backend/ .
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
@@ -1631,7 +1716,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
 **docker-compose.yml (Local Development):**
@@ -1650,7 +1735,7 @@ services:
       - db
       - redis
     volumes:
-      - ./src:/app/src
+      - ./backend/app:/app/app
   
   db:
     image: postgres:15
