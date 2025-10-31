@@ -2,15 +2,11 @@
 
 * [Welcome](README.md)
 
-## Getting Started
+## Documentation Standards
 
-* [Quickstart](getting-started/quickstart.md)
-* [Publish your docs](getting-started/publish-your-docs.md)
-
-## Basics
-
-* [Editor](basics/editor.md)
-* [Markdown](basics/markdown.md)
-* [Images & media](basics/images-and-media.md)
-* [Interactive blocks](basics/interactive-blocks.md)
-* [Integrations](basics/integrations.md)
+* [Project Overview](Documentation/Overview.md)
+* [Software Requirements Specification (SRS)](Documentation/SRS.md)
+* [High-Level Design (HLD)](Documentation/HLd.md)
+* [Low-Level Design (LLD)](Documentation/LLD.md)
+* [Technical Documentation](Documentation/Tech_docs.md)
+* [System Test Cases (STC)](Documentation/STC.md)
